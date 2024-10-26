@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'school',
     'department',
     'teacher',
-    'django_extensions'
+    'django_extensions',
+    'student',
 ]
 
 MIDDLEWARE = [
