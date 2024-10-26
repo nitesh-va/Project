@@ -29,7 +29,7 @@ class Student(models.Model):
     #class_teachers = models.CharField(max_length=100, default=False)  # Directly storing teacher's name
     total_marks = models.IntegerField(default=0)
     percentage = models.FloatField(default=0.0)
-    emp_name = models.ForeignKey('teacher.Teacher', on_delete=models.DO_NOTHING, null=True, blank=True)
+    emp_id = models.ForeignKey('teacher.Teacher', on_delete=models.DO_NOTHING, null=True, blank=True)
     dept_name=models.ForeignKey(Department, on_delete=models.DO_NOTHING, null=True, blank=True)
     created_on = models.DateTimeField(default=timezone.now, editable=False)
     updated_on = models.DateTimeField(auto_now=True)
