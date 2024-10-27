@@ -13,12 +13,9 @@ def run():
             old_school = teacher.school_name
             
             teacher.school_name = department.school  # Use the ForeignKey directly
+            teacher.save()  # Save the changes
+            print(f"Updated teacher {teacher.emp_id}: {old_school} -> {teacher.school_name}")
             
-            try:
-                teacher.save()  # Save the changes
-                print(f"Updated teacher {teacher.emp_id}: {old_school} -> {teacher.school_name}")
-            except Exception as e:
-                print(f"Error updating teacher {teacher.emp_id}: {e}")
 
-    print("Updated school_name for all teachers.")
+    
 
