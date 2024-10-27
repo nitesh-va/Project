@@ -1,10 +1,12 @@
-#  Django API for CRUD Operations
+# Day 1
 
-## Introduction
+##  Django API for CRUD Operations
+
+### Introduction
 
 This guide provides a step-by-step process to build a Django project that enables CRUD (Create, Read, Update, Delete) functionalities using the Django REST Framework (DRF) and Postman for API testing.
 
-### What is Django REST Framework?
+#### What is Django REST Framework?
 
 Django REST Framework (DRF) is a robust toolkit designed for developing RESTful APIs with Django. It streamlines the API creation process and includes features such as:
 
@@ -136,3 +138,156 @@ class StudentDetailView(APIView):
 Once the API is set up, you can test each endpoint using Postman by configuring requests for different operations—GET, POST, PUT, and DELETE—and inspecting the responses.
 
 This approach allows for effective management of student data through Django and Django Rest Framework, providing a solid foundation for further enhancements.
+
+# Day 2
+# Django Student Management API
+
+## Overview
+
+The Student Management API is designed using Django and the Django REST Framework (DRF). This API offers various endpoints for managing student records, calculating performance metrics, and retrieving specific data.
+
+## Models
+
+### Student_Task Model
+
+The `Student_Task` model stores data related to students and includes the following fields:
+
+1. **name**:
+   - **Type**: CharField
+   - **Max Length**: 50
+   - **Description**: Holds the name of the student.
+
+2. **roll_no**:
+   - **Type**: IntegerField
+   - **Default**: 0
+   - **Primary Key**: Yes
+   - **Description**: Serves as a unique identifier for each student.
+
+3. **chemistry**:
+   - **Type**: IntegerField
+   - **Default**: 0
+   - **Description**: Represents the marks obtained in Chemistry.
+
+4. **physics**:
+   - **Type**: IntegerField
+   - **Default**: 0
+   - **Description**: Represents the marks obtained in Physics.
+
+5. **maths**:
+   - **Type**: IntegerField
+   - **Default**: 0
+   - **Description**: Represents the marks obtained in Maths.
+
+6. **class_teacher**:
+   - **Type**: CharField
+   - **Max Length**: 50
+   - **Description**: Represents the name of the student's class teacher.
+
+### Methods
+
+- **total_marks()**: 
+  - **Description**: Calculates the total marks obtained by the student across all subjects (Chemistry, Physics, Maths).
+  
+- **percentage()**: 
+  - **Description**: Computes the percentage of marks obtained based on the total marks.
+
+- **__str__()**: 
+  - **Description**: Returns the name of the student as the string representation of the model instance.
+
+## API Endpoints
+
+### 1. Student Management
+
+- **Add Student**
+  - **URL**: `/add/`
+  - **Method**: `POST`
+  - **Description**: Create a new student record.
+
+- **List Students**
+  - **URL**: `/list/`
+  - **Method**: `GET`
+  - **Description**: Retrieve all student records.
+
+- **Update Student**
+  - **URL**: `/update/<int:roll_no>/`
+  - **Method**: `PUT`
+  - **Description**: Update an existing student record.
+
+- **Delete Student**
+  - **URL**: `/delete/<int:roll_no>/`
+  - **Method**: `DELETE`
+  - **Description**: Delete an existing student record.
+
+---
+
+### 2. Performance Analysis
+
+- **Get Toppers**
+  - **URL**: `/toppers/`
+  - **Method**: `GET`
+  - **Description**: Retrieve the top 5 students based on total marks.
+
+- **Students Above Cutoff**
+  - **URL**: `/cutoff/`
+  - **Method**: `GET`
+  - **Description**: Retrieve students who scored 150 or more total marks.
+
+- **Failed Students**
+  - **URL**: `/failed/`
+  - **Method**: `GET`
+  - **Description**: Retrieve students who have failed in one or more subjects.
+
+- **Students by Average Marks**
+  - **URL**: `/avg/`
+  - **Method**: `GET`
+  - **Description**: Retrieve students who scored above or below the average.
+
+- **Subject-Wise Failed Students**
+  - **URL**: `/subject_failed/`
+  - **Method**: `GET`
+  - **Description**: Retrieve students who failed in specific subjects.
+
+- **Students by Class Teacher**
+  - **URL**: `/teacher/`
+  - **Method**: `GET`
+  - **Description**: Retrieve students grouped by their class teacher.
+
+- **Performance of Teachers**
+  - **URL**: `/performance/`
+  - **Method**: `GET`
+  - **Description**: Retrieve performance metrics of teachers based on their students' results.
+
+## Serializers
+
+The `StudentTaskSerializer` is utilized for serializing the `Student_Task` model data:
+
+```python
+from rest_framework import serializers
+from .models import Student_Task
+
+class StudentTaskSerializer(serializers.ModelSerializer):
+    total_marks = serializers.SerializerMethodField()
+    percentage = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Student_Task
+        fields = ['name', 'roll_no', 'chemistry', 'physics', 'maths', 'class_teacher', 'total_marks', 'percentage']
+
+    def get_total_marks(self, obj):
+        return obj.total_marks()
+
+    def get_percentage(self, obj):
+        return obj.percentage()
+```
+## Admin Registration
+```python 
+from django.contrib import admin
+from student.models import Student
+from unfold.admin import ModelAdmin as UnfoldModelAdmin
+# Register your models here.
+class StudentAdmin(UnfoldModelAdmin):
+    list_display = ['name', 'roll_no', 'maths_marks','physics_marks','chemistry_marks','total_marks','percentage','emp_id','dept_name']
+
+
+admin.site.register(Student,StudentAdmin)
+```
