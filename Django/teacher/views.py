@@ -1,8 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
 from .serializers import TeacherSerializer
+
 from teacher import models
+
+from .utils import get_teacher_performance
 # Create your views here.
 class TeacherViews(APIView):
     def get(self,request):
@@ -38,3 +42,6 @@ class TeacherByIdView(APIView):
             teacher.delete()  # Delete the student instance
             return Response(status=status.HTTP_204_NO_CONTENT)
     
+class TeacherPerformance(APIView):
+    def get(self, request):
+        return Response(get_teacher_performance())
