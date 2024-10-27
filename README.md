@@ -28,6 +28,8 @@ The School Management System is a web application built using Django and Django 
 - pip install(Python package installer)
 - Django
 - Django REST Framework(Serializers)
+- Django extensions
+- Django unfold
 
 ### Installation
 
