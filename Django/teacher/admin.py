@@ -1,8 +1,8 @@
 from django.contrib import admin
 from teacher.models import Teacher
-
+from unfold.admin import ModelAdmin as UnfoldModelAdmin
 # Register your models here.
-class TeacherAdmin(admin.ModelAdmin):
+class TeacherAdmin(UnfoldModelAdmin):
     list_display = ['name', 'emp_id', 'performance','dept_name','school_name']
 
 admin.site.register(Teacher, TeacherAdmin)
