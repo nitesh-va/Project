@@ -7,13 +7,14 @@ def run():
     for teacher in teachers:
         # Fetch the department for the teacher
         department = teacher.dept_name
-        
-        if department:  # Ensure the department exists
+        # Ensure the department exists
+        if department:  
             # Update the school_name in the Teacher model from the Department's school
             old_school = teacher.school_name
-            
-            teacher.school_name = department.school  # Use the ForeignKey directly
-            teacher.save()  # Save the changes
+            # Use the ForeignKey directly
+            teacher.school_name = department.school  
+            # Save the changes
+            teacher.save()  
             print(f"Updated teacher {teacher.emp_id}: {old_school} -> {teacher.school_name}")
             
 

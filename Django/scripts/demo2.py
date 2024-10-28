@@ -15,7 +15,8 @@ def run():
                 if teacher.dept_name:
                     # Update the student's department to the teacher's department
                     student.dept_name = teacher.dept_name
-                    student.save()  # Save the updated student instance
+                    # Save the updated student instance
+                    student.save()  
                     print(f'Successfully updated student {student.roll_no}: '
                           f'Department to {teacher.dept_name.department_name}.')
                 else:

@@ -80,3 +80,18 @@ class AverageMarksSubject(APIView):
             chemistry=Avg('chemistry_marks')
         )
         return Response(averages) 
+
+class InactiveStudent(APIView):
+    def get(self, request):
+            # Retrieve the teacher based on emp_id, ensuring they are active
+            students= models.Student.active.is_inactive()
+            serializer=StudentSerializer(students, many=True)
+            return Response(serializer.data)
+
+
+class ActiveStudent(APIView):
+    def get(self, request):
+            # Retrieve the teacher based on emp_id, ensuring they are active
+            students= models.Student.active.is_active()
+            serializer=StudentSerializer(students, many=True)
+            return Response(serializer.data)

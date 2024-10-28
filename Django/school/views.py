@@ -42,4 +42,19 @@ class SchoolViewByID(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
+class InactiveSchool(APIView):
+    def get(self, request):
+            # Retrieve the teacher based on emp_id, ensuring they are active
+            schools= models.School.active.is_inactive()
+            serializer=SchoolSerializer(schools, many=True)
+            return Response(serializer.data)
+
+
+class ActiveSchool(APIView):
+    def get(self, request):
+            # Retrieve the teacher based on emp_id, ensuring they are active
+            schools= models.School.active.is_active()
+            serializer=SchoolSerializer(schools, many=True)
+            return Response(serializer.data)
