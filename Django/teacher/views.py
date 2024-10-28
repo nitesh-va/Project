@@ -5,6 +5,7 @@ from rest_framework import status
 from .serializers import TeacherSerializer
 
 from teacher import models
+from student.models import Student
 
 from .utils import get_teacher_performance
 # Create your views here.
@@ -45,3 +46,28 @@ class TeacherByIdView(APIView):
 class TeacherPerformance(APIView):
     def get(self, request):
         return Response(get_teacher_performance())
+
+
+class PassedFailedStudentsCountView(APIView):
+    def get(self, request):
+        passing_percentage = 33.0
+        
+        # Initialize a dictionary to hold results
+        results = {}
+
+        # Get all students and categorize them by teacher's emp_id
+        for student in Student.objects.all():
+            teacher_emp_id = student.emp_id.emp_id  # Accessing emp_id from the ForeignKey
+
+            if teacher_emp_id not in results:
+                results[teacher_emp_id] = {
+                    'passed': 0,
+                    'failed': 0
+                }
+
+            if student.percentage >= passing_percentage:
+                results[teacher_emp_id]['passed'] += 1
+            else:
+                results[teacher_emp_id]['failed'] += 1
+        
+        return Response(results)

@@ -11,12 +11,13 @@ def get_teacher_performance():
     # Get all teachers
     teachers = Teacher.objects.all()
     for teacher in teachers:
-        students = Student.objects.filter(emp_id=teacher)  # Filter by emp_id
+        # Filter by emp_id
+        students = Student.objects.filter(emp_id=teacher)  
         total_students = students.count()
         total_passed = students.filter(percentage__gte=passing_threshold).count()
-
+        #calculate the passing student 
         passing_percentage = (total_passed / total_students * 100) if total_students > 0 else 0
-
+        #append it to the performance_data list
         performance_data.append({
             "emp_id": teacher.emp_id,
             "passing_percentage": passing_percentage,
