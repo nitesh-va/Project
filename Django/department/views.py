@@ -43,31 +43,18 @@ class DepartmentViewByID(APIView):
 
 class DepartmentActiveTeachersView(APIView):
     def get(self, request, dept_id):
-        try:
             # Retrieve the department based on dept_id
             #department =models.Department.active.is_active().get(dept_id=dept_id)
             # Get inactive teachers under this department
-            print(dept_id)
-            active_teachers = models.Teacher.active.is_active().filter(dept_name__dept_id=dept_id,dept_name__is_active=True).values()
-    
-            
-    
-            return Response(active_teachers, status=200)
-        except models.Department.DoesNotExist:
-            return Response({'error': 'Department not found or is not active.'}, status=404)
+        active_teachers = models.Teacher.active.is_active().filter(dept_name__dept_id=dept_id,dept_name__is_active=True).values()
+        inactive_teachers = models.Teacher.active.is_inactive().filter(dept_name__dept_id=dept_id,dept_name__is_active=True).values()
+        response_data = {
+            'active_teachers': list(active_teachers),
+            'inactive_teachers': list(inactive_teachers)
+        }
+        return Response(response_data, status=200)
         
-class DepartmentInactiveTeachersView(APIView):
-    def get(self, request, dept_id):
-        try:
-            # Retrieve the department based on dept_id
-            #department =models.Department.active.is_active().get(dept_id=dept_id)
-            # Get inactive teachers under this department
-            inactive_teachers = models.Teacher.active.is_inactive().filter(dept_name__dept_id=dept_id,dept_name__is_active=True).values()
-    
-            
-            return Response(inactive_teachers, status=200)
-        except models.Department.DoesNotExist:
-            return Response({'error': 'Department not found or is not active.'}, status=404)
+        
 
 class InactiveDepartment(APIView):
     def get(self, request):
