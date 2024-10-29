@@ -75,56 +75,21 @@ class PassedFailedStudentsCountView(APIView):
     
 class TeacherActiveStudentsView(APIView):
     def get(self, request, emp_id):
-        try:
-            # Retrieve the teacher based on emp_id
-            teacher = models.Teacher.active.get(emp_id=emp_id)
+            # Retrieve the all the active teacher based on emp_id
+            #teacher = models.Teacher.active.is_active().get(emp_id=emp_id)
             # Get active students under this teacher
-            active_students = Student.active.filter(emp_id=emp_id,is_active=True)
-
+            active_students = Student.active.is_active().filter(emp_id__emp_id=emp_id,emp_id__is_active=True).values()
+            inactive_students = Student.active.is_inactive().filter(emp_id__emp_id=emp_id,emp_id__is_active=True).values()
+    
             # Prepare response data
-            students_data = [
-                {
-                    'student_id': student.roll_no,
-                    'name': student.name,
-                    'is_active': student.is_active,
-                }
-                for student in active_students
-            ]
-            
             response_data = {
-                'teacher_id': teacher.emp_id,
-                'teacher_name': teacher.name,
-                'active_students': students_data,
+                'active_students': active_students,
+                'inactive_students': inactive_students,             
             }
+            
             return Response(response_data, status=200)
-        except models.Teacher.DoesNotExist:
-            return Response({'error': 'Teacher not found or is not active.'}, status=404)
+            
 
-class TeacherNotActiveStudentsView(APIView):
-    def get(self, request, emp_id):
-        try:
-            # Retrieve the teacher based on emp_id
-            teacher = models.Teacher.active.get(emp_id=emp_id)
-            # Get active students under this teacher
-            notactive_students = Student.active.is_inactive().filter(emp_id=emp_id)
-            # Prepare response data
-            students_data = [
-                {
-                    'student_id': student.roll_no,
-                    'name': student.name,
-                    'is_active': student.is_active,
-                }
-                for student in notactive_students
-            ]
-            
-            response_data = {
-                'teacher_id': teacher.emp_id,
-                'teacher_name': teacher.name,
-                'active_students': students_data,
-            }
-            return Response(response_data, status=200)
-        except models.Teacher.DoesNotExist:
-            return Response({'error': 'Teacher not found or is not active.'}, status=404)
 
 class ActiveTeacherDetailView(APIView):
     def get(self, request):

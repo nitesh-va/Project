@@ -45,53 +45,27 @@ class DepartmentActiveTeachersView(APIView):
     def get(self, request, dept_id):
         try:
             # Retrieve the department based on dept_id
-            department = models.Department.active.get(dept_id=dept_id,is_active=True)
-            # Get active teachers under this department
-            active_teachers = models.Teacher.objects.filter(dept_name=department,is_active=True)
-
-            # Prepare response data
-            teachers_data = [
-                {
-                    'teacher_id': teacher.emp_id,
-                    'name': teacher.name,
-                    'is_active': teacher.is_active,
-                }
-                for teacher in active_teachers
-            ]
+            #department =models.Department.active.is_active().get(dept_id=dept_id)
+            # Get inactive teachers under this department
+            print(dept_id)
+            active_teachers = models.Teacher.active.is_active().filter(dept_name__dept_id=dept_id,dept_name__is_active=True).values()
+    
             
-            response_data = {
-                'department_id': department.dept_id,
-                'department_name': department.department_name,
-                'active_teachers': teachers_data,
-            }
-            return Response(response_data, status=200)
+    
+            return Response(active_teachers, status=200)
         except models.Department.DoesNotExist:
             return Response({'error': 'Department not found or is not active.'}, status=404)
-
+        
 class DepartmentInactiveTeachersView(APIView):
     def get(self, request, dept_id):
         try:
             # Retrieve the department based on dept_id
-            department =models.Department.active.is_active().get(dept_id=dept_id)
+            #department =models.Department.active.is_active().get(dept_id=dept_id)
             # Get inactive teachers under this department
-            inactive_teachers = models.Teacher.active.is_inactive()
-
-            # Prepare response data
-            teachers_data = [
-                {
-                    'teacher_id': teacher.emp_id,
-                    'name': teacher.name,
-                    'is_active': teacher.is_active,
-                }
-                for teacher in inactive_teachers
-            ]
+            inactive_teachers = models.Teacher.active.is_inactive().filter(dept_name__dept_id=dept_id,dept_name__is_active=True).values()
+    
             
-            response_data = {
-                'department_id': department.dept_id,
-                'department_name': department.department_name,
-                'inactive_teachers': teachers_data,
-            }
-            return Response(response_data, status=200)
+            return Response(inactive_teachers, status=200)
         except models.Department.DoesNotExist:
             return Response({'error': 'Department not found or is not active.'}, status=404)
 

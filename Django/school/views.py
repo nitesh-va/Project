@@ -8,6 +8,7 @@ from rest_framework import status
 
 from school import models
 from .serializers import SchoolSerializer
+from department.models import Department
 # Create your views here.
 class SchoolView(APIView):
     def get(self,request):
@@ -58,3 +59,38 @@ class ActiveSchool(APIView):
             schools= models.School.active.is_active()
             serializer=SchoolSerializer(schools, many=True)
             return Response(serializer.data)
+
+class SchoolActiveDepartmentView(APIView):
+    def get(self, request, school_id):
+        try:
+            # Retrieve the department based on dept_id
+            school =models.School.active.is_active().get(school_id=school_id)
+            # Get inactive teachers under this department
+            inactive_department = Department.active.is_inactive().filter(school=school_id).values('dept_id','department_name', 'is_active')
+
+            response_data = {
+                'school_id': school.school_id,
+                'school_name': school.name,
+                'inactive_teachers': inactive_department,
+            }
+            return Response(response_data, status=200)
+        except models.School.DoesNotExist:
+            return Response({'error': 'School not found or is not active.'}, status=404)
+
+class SchoolActiveDepartmentView(APIView):
+    def get(self, request, school_id):        
+            # Retrieve the department based on dept_id
+            #school =models.School.active.is_active().get(school_id=school_id)
+            # Get inactive teachers under this department
+        active_department = Department.active.is_active().filter(school__school_id=school_id,school__is_active=True).values()
+        return Response(active_department, status=200)
+        
+
+class SchoolInActiveDepartmentView(APIView):
+    def get(self, request, school_id):
+            # Retrieve the department based on dept_id
+            # school =models.School.active.is_active().get(school_id=school_id)
+            # Get inactive teachers under this department
+        inactive_department = Department.active.is_inactive().filter(school__school_id=school_id,school__is_active = True).values()
+        return Response(inactive_department, status=200)
+        
