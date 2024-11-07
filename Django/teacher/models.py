@@ -11,11 +11,16 @@ class Teacher(models.Model):
     created_on = models.DateTimeField(default=timezone.now, editable=False)
     updated_on = models.DateTimeField(auto_now=True)
     dept_name=models.ForeignKey('department.Department', on_delete=models.SET_NULL, null=True, blank=True)
-    school_name=models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True)
+    school_name = models.ForeignKey('school.School', on_delete=models.SET_NULL, null=True, blank=True)
+    #hod=models.CharField(max_length=100,default=0)
     is_active=models.BooleanField(default=True)
+
+
+
+
     
     objects = models.Manager()
     active = ActiveManager()
 
     def __str__(self):
-        return f"{self.name} (ID: {self.emp_id})"
+        return f"{self.name} (Id: {self.emp_id})"

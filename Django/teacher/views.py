@@ -11,7 +11,7 @@ from .utils import get_teacher_performance
 # Create your views here.
 class TeacherViews(APIView):
     def get(self,request):
-        teachers=models.Teacher.objects.all()
+        teachers=models.Teacher.objects.all()    
         serializer=TeacherSerializer(teachers,many=True)
         return Response(serializer.data)
     

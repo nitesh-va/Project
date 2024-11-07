@@ -15,7 +15,16 @@ class ActiveManager(models.Manager):
     
     def is_inactive(self):
         return self.get_queryset().filter(is_active=False)
-        
+
+def formatted_departments(self, obj):
+        # Fetch active departments linked to the school
+        departments = obj.dept_name.filter(is_active=True)  # Adjust based on your field name
+        # Create a formatted string for department names and IDs
+        dept_list = [f"{department.department_name} (ID: {department.dept_id})" for department in departments]
+        return ' '.join(dept_list) if dept_list else 'No active departments'
+
+        formatted_departments.short_description = 'Dept name *' 
+
 class School(models.Model):
     name = models.CharField(max_length=100)  # School name
     school_id = models.IntegerField(primary_key=True)  # Primary key
@@ -23,9 +32,10 @@ class School(models.Model):
     created_on = models.DateTimeField(default=timezone.now, editable=False)
     updated_on = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
+    dept_name=models.ManyToManyField('department.Department',related_name='school_department', blank=True)
 
     objects = models.Manager()
     active = ActiveManager()
 
     def __str__(self):
-        return self.name
+        return f"{self.name} (ID: {self.school_id})"

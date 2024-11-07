@@ -14,7 +14,7 @@ class DepartmentView(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        serializer=serializers.DepartmentSerializer(data=request.data)
+        serializer=serializers.DepartmentSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
