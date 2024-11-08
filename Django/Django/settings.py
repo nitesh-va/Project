@@ -139,5 +139,6 @@ rest_framework = {
     ]
 }
 
-
+AUTH_USER_MODEL = 'user.User'
+ 
  

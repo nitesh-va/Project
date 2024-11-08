@@ -14,15 +14,18 @@ class LoginView(APIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-        user = authenticate(username=username, password=password)
+        user = authenticate(request, username=username, password=password)
         if user:
-            token = Token.objects.get_or_create(user=user)
+            token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key})
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+
     
 class UserView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self,request):
         users=models.User.objects.all()
         serializer=UserSerializer(users,many=True)
